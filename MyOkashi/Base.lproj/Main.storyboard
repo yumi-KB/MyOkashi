@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" text="" translatesAutoresizingMaskIntoConstraints="NO" id="BqI-dP-ZxD">
+                            <searchBar contentMode="redraw" text="" placeholder="お菓子の名前を入力してください" translatesAutoresizingMaskIntoConstraints="NO" id="BqI-dP-ZxD">
                                 <rect key="frame" x="0.0" y="44" width="414" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
@@ -56,6 +56,10 @@
                             <constraint firstItem="BqI-dP-ZxD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="nfN-fM-pLu"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="searchText" destination="BqI-dP-ZxD" id="m0h-Yw-dG6"/>
+                        <outlet property="tableView" destination="gcQ-bF-rRt" id="hdn-0a-VIV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
