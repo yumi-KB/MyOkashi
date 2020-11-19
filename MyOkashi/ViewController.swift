@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  MyOkashi
-//
-//  Created by yumi kanebayashi on 2020/11/09.
-//
-
 import UIKit
 import SafariServices
 
@@ -14,24 +7,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var searchText: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
-    // お菓子のリスト（タプル配列）
     var okashiList: [(name: String, maker: String, link: URL, image: URL)] = []
-
-    struct ItemJson: Codable {
-        // お菓子の名称
-        let name: String?
-        // メーカー
-        let maker: String?
-        // 掲載URL
-        let url: URL?
-        // 画像URL
-        let image: URL?
-    }
-
-    struct ResultJson: Codable {
-        let item: [ItemJson]?
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +26,7 @@ class ViewController: UIViewController {
         }
 
         // リクエストURLの組み立て
-        guard let request_url = URL(string: "https://sysbird.jp/toriko/api/?apikey=guest&format=json&keyword=\(keyword_encode)&max=10&order=r") else {
+        guard let request_url = URL(string: "https:sysbird.jp/toriko/api/?apikey=guest&format=json&keyword=\(keyword_encode)&max=10&order=r") else {
             return
         }
         print(request_url)
@@ -69,11 +45,11 @@ class ViewController: UIViewController {
                 let decoder = JSONDecoder()
                 let json = try decoder.decode(ResultJson.self, from: data!)
                 // print(json)
-                
+
                 if let items = json.item {
                     // お菓子のリストを初期化
                     self.okashiList.removeAll()
-                    
+
                     for item in items {
                         if let maker = item.maker, let name = item.name, let link = item.url, let image = item.image {
                             let okashi = (maker, name, link, image)
@@ -82,7 +58,7 @@ class ViewController: UIViewController {
                     }
                     // TableViewを更新する
                     self.tableView.reloadData()
-                    
+
                     if let okashidbg = self.okashiList.first {
                         print("---")
                         print("okashiList[0] = \(okashidbg)")
