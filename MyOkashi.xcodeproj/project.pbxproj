@@ -44,6 +44,8 @@
 		4B46334B25668D370062A746 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4B46333B25663BBD0062A746 /* OkashiJson.swift */,
+				4B4633532566A30C0062A746 /* ResultJson.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -69,8 +71,6 @@
 			children = (
 				4B46334B25668D370062A746 /* Models */,
 				4BE3B48B25592AE300471FFE /* AppDelegate.swift */,
-				4B46333B25663BBD0062A746 /* OkashiJson.swift */,
-				4B4633532566A30C0062A746 /* ResultJson.swift */,
 				4BE3B48D25592AE300471FFE /* SceneDelegate.swift */,
 				4BE3B48F25592AE300471FFE /* ViewController.swift */,
 				4BE3B49125592AE300471FFE /* Main.storyboard */,
