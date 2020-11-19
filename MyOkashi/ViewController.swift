@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class ViewController: UIViewController {
     
@@ -35,11 +36,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Delegateの通知先を設定
         searchText.delegate = self
-        
-        // TableViewのdatasourceを設定
         tableView.dataSource = self
+        tableView.delegate = self
     }
     
     
@@ -139,4 +138,19 @@ extension ViewController: UITableViewDataSource {
 }
     
     
-
+// MARK: UITableViewDelegate, SFSafariViewControllerDelegate
+extension ViewController: UITableViewDelegate, SFSafariViewControllerDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let safariViewController = SFSafariViewController(url: okashiList[indexPath.row].link)
+        
+        safariViewController.delegate = self
+        
+        present(safariViewController, animated: true, completion: nil)
+    }
+    
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        dismiss(animated: true, completion: nil)
+    }
+}
