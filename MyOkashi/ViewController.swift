@@ -1,5 +1,6 @@
 import UIKit
 import SafariServices
+import Alamofire
 
 class ViewController: UIViewController {
     
@@ -17,59 +18,60 @@ class ViewController: UIViewController {
         tableView.delegate = self
     }
     
-    
+
     // MARK: Private Method
     private func searchOkashi(keyword: String) {
-        // お菓子の検索キーワードをURLエンコードする
-        guard let keyword_encode = keyword.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            return
-        }
-
-        // リクエストURLの組み立て
-        guard let request_url = URL(string: "https:sysbird.jp/toriko/api/?apikey=guest&format=json&keyword=\(keyword_encode)&max=10&order=r") else {
-            return
-        }
-        print(request_url)
-
-        let request = URLRequest(url: request_url)
-
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
-
-        let task = session.dataTask(with: request, completionHandler: {
-            (data, response, error) in
-            // タスク完了後、セッション終了
-            session.finishTasksAndInvalidate()
-
+        Alamofire.request("https:sysbird.jp/toriko/api/",
+                          method: .get,
+                          parameters: [
+                            "apikey": "guest",
+                            "format": "json",
+                            "keyword": "\(keyword)",
+                            "max": "10",
+                            "order": "r"],
+                          // キーワードをURLエンコードする
+                          encoding: URLEncoding(destination: .queryString)
+                          
+        ).response { response in
+            guard let data = response.data else {
+                print("Error with response")
+                return
+            }
+            
             do {
                 // JSONデータをパースする
                 let decoder = JSONDecoder()
-                let json = try decoder.decode(ResultJson.self, from: data!)
-                // print(json)
-
-                if let items = json.item {
-                    // お菓子のリストを初期化
-                    self.okashiList.removeAll()
-
-                    for item in items {
-                        if let maker = item.maker, let name = item.name, let link = item.url, let image = item.image {
-                            let okashi = (maker, name, link, image)
-                            self.okashiList.append(okashi)
-                        }
-                    }
-                    // TableViewを更新する
-                    self.tableView.reloadData()
-
-                    if let okashidbg = self.okashiList.first {
-                        print("---")
-                        print("okashiList[0] = \(okashidbg)")
-                    }
-                }
+                let json = try decoder.decode(ResultJson.self, from: data)
+                print(json)
+                
+                self.setOkashi(json, setList: self.okashiList)
+                // TableViewを更新する
+                self.tableView.reloadData()
+                
             } catch {
-                print("エラーが出ました")
+                print("Error failed to parse JSON: \(error)")
             }
-        })
-        // タスクの実行
-        task.resume()
+        }
+    }
+
+
+    private func setOkashi(_ json: ResultJson, setList okashiList: [(name: String, maker: String, link: URL, image: URL)]) {
+        if let items = json.item {
+            // お菓子のリストを初期化
+            self.okashiList.removeAll()
+
+            for item in items {
+                if let maker = item.maker, let name = item.name, let link = item.url, let image = item.image {
+                    let okashi = (maker, name, link, image)
+                    self.okashiList.append(okashi)
+                }
+            }
+
+            if let okashidbg = self.okashiList.first {
+                print("---")
+                print("okashiList[0] = \(okashidbg)")
+            }
+        }
     }
 }
 
