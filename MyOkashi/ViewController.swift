@@ -46,30 +46,36 @@ class ViewController: UIViewController {
                 let json = try decoder.decode(ResultJson.self, from: data!)
                 // print(json)
 
-                if let items = json.item {
-                    // お菓子のリストを初期化
-                    self.okashiList.removeAll()
-
-                    for item in items {
-                        if let maker = item.maker, let name = item.name, let link = item.url, let image = item.image {
-                            let okashi = (maker, name, link, image)
-                            self.okashiList.append(okashi)
-                        }
-                    }
-                    // TableViewを更新する
-                    self.tableView.reloadData()
-
-                    if let okashidbg = self.okashiList.first {
-                        print("---")
-                        print("okashiList[0] = \(okashidbg)")
-                    }
-                }
+                self.setOkashi(json, setList: self.okashiList)
+                // TableViewを更新する
+                self.tableView.reloadData()
+                
             } catch {
-                print("エラーが出ました")
+                print("Error failed to parse JSON: \(error)")
             }
         })
         // タスクの実行
         task.resume()
+    }
+
+
+    private func setOkashi(_ json: ResultJson, setList okashiList: [(name: String, maker: String, link: URL, image: URL)]) {
+        if let items = json.item {
+            // お菓子のリストを初期化
+            self.okashiList.removeAll()
+            
+            for item in items {
+                if let maker = item.maker, let name = item.name, let link = item.url, let image = item.image {
+                    let okashi = (maker, name, link, image)
+                    self.okashiList.append(okashi)
+                }
+            }
+        }
+        
+        if let okashidbg = self.okashiList.first {
+            print("---")
+            print("okashiList[0] = \(okashidbg)")
+        }
     }
 }
 
